@@ -24,15 +24,10 @@ describe("Unit test create product use case", () => {
   it("should not find a product", async () => {
     const productRepository = new ProductRepository();
 
-    jest.spyOn(productRepository, "find").mockResolvedValue(
-      Promise.reject("Product not found")
-    );
+    jest.spyOn(productRepository, "find").mockRejectedValue(new Error("Product not found"));
 
     const usecase = new FindProductUseCase(productRepository);
 
-    expect(() => usecase.execute({ id: "1" })).rejects.toThrow("Product not found");
+    await expect(() => usecase.execute({ id: "1" })).rejects.toThrow("Product not found");
   });
-
-
-
 })

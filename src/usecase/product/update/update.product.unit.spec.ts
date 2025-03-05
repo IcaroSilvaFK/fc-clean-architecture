@@ -36,8 +36,8 @@ describe("Unit test create product use case", () => {
   it("Should not update product", async () => {
     const productRepository = new ProductRepository();
 
-    jest.spyOn(productRepository, "find").mockResolvedValue(
-      Promise.reject("Product not found")
+    jest.spyOn(productRepository, "find").mockRejectedValue(
+      new Error("Product not found")
     );
 
     const productUpdateUseCase = new UpdateProductUseCase(productRepository);
@@ -47,9 +47,7 @@ describe("Unit test create product use case", () => {
       name: "Product 2",
       price: 20,
     };
-    expect(() => {
-      return productUpdateUseCase.execute(input);
-    }).rejects.toThrow("Product not found");
+    await expect(() => productUpdateUseCase.execute(input)).rejects.toThrow("Product not found");
 
   })
 })
